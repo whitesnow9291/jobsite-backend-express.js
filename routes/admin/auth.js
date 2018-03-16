@@ -3,6 +3,7 @@ var passport = require('passport');
 var config = require('../../config/database');
 var express = require('express');
 var User = require("../../models/user");
+var SkillList = require("../../models/skill")
 var Restaurant = require("../../models/restaurant");
 var ObjectId = require('mongoose').Types.ObjectId; 
 var constants = require('../../config/constants');
@@ -153,6 +154,16 @@ router.post('/update', function(req, res) {
       }); 
     }
   });
+  newuser.skill_array.forEach(function(element) {
+    SkillList.findOne({'name':element}, function (err, skill) {
+      if (!skill) {
+        let newskill = new SkillList({
+          name: element
+        })
+        newskill.save()
+      }
+    });
+  }, this);
 });
 router.post('/register_company', function(req, res) {
   let company_id = req.body.company_id

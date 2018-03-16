@@ -8,7 +8,7 @@ var router = express.Router();
 var User = require("../models/user");
 var constant = require("../config/constants");
 var Restaurant = require("../models/restaurant");
-
+var SkillList = require("../models/skill")
 router.post('/search', function(req, res) {
   User.find({$or:[ { 'skill_array' : { $in: req.body.searchSkills } },
           {'role': req.body.searchRole}
@@ -20,6 +20,15 @@ router.post('/search', function(req, res) {
     });
   })
 
+})
+
+router.get('/skills', function(req, res){
+  SkillList.find({}).select('-_id').exec(function(error, skills){
+    return res.json({
+    success: true,
+      data: {skills:skills} 
+    });
+  })
 })
 router.post('/signup', function(req, res) {
   if (!req.body.username || !req.body.password || !req.body.email) {
